@@ -11,10 +11,51 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    /**
+     * 分渠道构建
+     */
+    productFlavors {
+        /*wandoujia {
+            // 豌豆荚渠道
+        }*/
+
+        /*baidu {
+            // 百度渠道
+        }*/
+    }
+
+    /**
+     * 同一渠道下不同版本
+     */
     buildTypes {
         release {
+            applicationIdSuffix ".release"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+        }
+    }
+
+    /**
+     * 签名
+     */
+    signingConfigs {
+        release {
+            storeFile file("promise.keystore")
+            storePassword "papaya@@3a2p1y"
+            keyAlias "androidreleasekey"
+            keyPassword "papaya@@3a2p1y"
+        }
+
+        debug {
+            storeFile file("signjar_release/promise.keystore")
+            storePassword "papaya@@3a2p1y"
+            keyAlias "androidreleasekey"
+            keyPassword "papaya@@3a2p1y"
         }
     }
 }
