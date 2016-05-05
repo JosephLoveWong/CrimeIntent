@@ -26,6 +26,18 @@ android {
     }
 
     /**
+     * 签名
+     */
+    signingConfigs {
+        release {
+            storeFile file("signjar_release/promise.keystore")
+            storePassword "papaya@@3a2p1y"
+            keyAlias "promise"
+            keyPassword "papaya@@3a2p1y"
+        }
+    }
+
+    /**
      * 同一渠道下不同版本
      */
     buildTypes {
@@ -33,31 +45,16 @@ android {
             applicationIdSuffix ".release"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
 
         debug {
             applicationIdSuffix ".debug"
         }
+
     }
 
-    /**
-     * 签名
-     */
-    signingConfigs {
-        release {
-            storeFile file("promise.keystore")
-            storePassword "papaya@@3a2p1y"
-            keyAlias "androidreleasekey"
-            keyPassword "papaya@@3a2p1y"
-        }
 
-        debug {
-            storeFile file("signjar_release/promise.keystore")
-            storePassword "papaya@@3a2p1y"
-            keyAlias "androidreleasekey"
-            keyPassword "papaya@@3a2p1y"
-        }
-    }
 }
 
 dependencies {
