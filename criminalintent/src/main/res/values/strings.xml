@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Criminalintent</string>
     <string name="hint_crime_title">enter a crime title</string>
+    <string name="title_crime_date">Crime Date</string>
 </resources>

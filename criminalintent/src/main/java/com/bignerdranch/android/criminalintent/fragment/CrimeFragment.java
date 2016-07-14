@@ -1,9 +1,10 @@
 package com.bignerdranch.android.criminalintent.fragment;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.bignerdranch.android.criminalintent.bean.Crime;
 import com.bignerdranch.android.criminalintent.bean.CrimeLab;
 import com.bignerdranch.android.criminalintent.util.LogUtil;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -27,6 +29,8 @@ import java.util.UUID;
 public class CrimeFragment extends Fragment {
     private static final String TAG = "CrimeFragment";
     public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.fragment.CrimeFragment.EXTRA_CRIME_ID";
+    private static final String DIALOG_DATE_TAG = "com.bignerdranch.android.criminalintent.fragment.CrimeFragment.DIALOG_DATE_TAG";
+    public static final int CODE_REQUEST = 0;
 
     private Crime mCrime;
     private EditText mTitle;
@@ -86,8 +90,16 @@ public class CrimeFragment extends Fragment {
         });
 
         mCrimeDate = (Button) rootView.findViewById(R.id.crime_date);
-        mCrimeDate.setEnabled(false);
         mCrimeDate.setText(mCrime.getDate().toString());
+        mCrimeDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+                dialog.setTargetFragment(CrimeFragment.this, CODE_REQUEST);
+                dialog.show(fm,DIALOG_DATE_TAG);
+            }
+        });
 
         return rootView;
     }
@@ -98,9 +110,11 @@ public class CrimeFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        getActivity().setResult(Activity.RESULT_OK, null);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == CODE_REQUEST){
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_CRIME_DATE);
+            mCrimeDate.setText(date.toString());
+            mCrime.setDate(date);
+        }
     }
 }
