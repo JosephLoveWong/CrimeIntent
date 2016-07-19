@@ -2,6 +2,8 @@ package com.bignerdranch.android.criminalintent.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bignerdranch.android.criminalintent.R;
+import com.bignerdranch.android.criminalintent.activity.CrimeListActivity;
 import com.bignerdranch.android.criminalintent.activity.CrimePagerActivity;
 import com.bignerdranch.android.criminalintent.bean.Crime;
 import com.bignerdranch.android.criminalintent.bean.CrimeLab;
@@ -25,6 +29,7 @@ public class CrimeListFragment extends ListFragment {
     public static final int REQUESTCODE = 1;
     private static final String TAG = "CrimeListFragment";
     private List<Crime> mCrimes;
+    private FloatingActionButton mFab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,9 +41,22 @@ public class CrimeListFragment extends ListFragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mFab = ((CrimeListActivity) getActivity()).getFab();
+        mFab.setVisibility(View.VISIBLE);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "add crime", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+        ((CrimeAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
     @Override
@@ -53,7 +71,7 @@ public class CrimeListFragment extends ListFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUESTCODE){
+        if (requestCode == REQUESTCODE) {
             // TODO
         }
     }
@@ -67,7 +85,7 @@ public class CrimeListFragment extends ListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
+            if (convertView == null) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_crime, null);
             }
 
