@@ -11,9 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bignerdranch.android.criminalintent.R;
+import com.bignerdranch.android.criminalintent.activity.CrimeActivity;
 import com.bignerdranch.android.criminalintent.activity.CrimeListActivity;
 import com.bignerdranch.android.criminalintent.activity.CrimePagerActivity;
 import com.bignerdranch.android.criminalintent.bean.Crime;
@@ -27,6 +27,7 @@ import java.util.List;
  */
 public class CrimeListFragment extends ListFragment {
     public static final int REQUESTCODE = 1;
+    public static final int REQUESTCODE_CRIMEFRAGMENT = 2;
     private static final String TAG = "CrimeListFragment";
     private List<Crime> mCrimes;
     private FloatingActionButton mFab;
@@ -48,7 +49,11 @@ public class CrimeListFragment extends ListFragment {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "add crime", Toast.LENGTH_SHORT).show();
+                Crime crime = new Crime();
+                CrimeLab.getInstance(getActivity()).addCrime(crime);
+                Intent intent = new Intent(getActivity(), CrimeActivity.class);
+                intent.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getID());
+                startActivityForResult(intent, REQUESTCODE_CRIMEFRAGMENT);
             }
         });
     }
@@ -64,7 +69,7 @@ public class CrimeListFragment extends ListFragment {
         LogUtil.d(TAG, "onClick " + position);
 
         Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
-        intent.putExtra(CrimePagerActivity.EXTRA_CRIME_ID, mCrimes.get(position).getID());
+        intent.putExtra(CrimeFragment.EXTRA_CRIME_ID, mCrimes.get(position).getID());
 
         startActivityForResult(intent, REQUESTCODE);
     }

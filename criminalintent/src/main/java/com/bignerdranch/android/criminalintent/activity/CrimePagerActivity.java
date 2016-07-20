@@ -20,7 +20,6 @@ import java.util.UUID;
  */
 public class CrimePagerActivity extends FragmentActivity {
     private static final String TAG = "CrimePagerActivity";
-    public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.activity.CrimePagerActivity.EXTRA_CRIME_ID";
 
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
@@ -50,7 +49,7 @@ public class CrimePagerActivity extends FragmentActivity {
             }
         });
 
-        UUID crimeId = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
+        UUID crimeId = (UUID) getIntent().getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
         for(int i = 0; i < mCrimes.size(); i++){
             if(mCrimes.get(i).getID().equals(crimeId)){
                 mViewPager.setCurrentItem(i);
