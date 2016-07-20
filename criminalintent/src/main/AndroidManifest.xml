@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bignerdranch.android.criminalintent">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,6 +14,10 @@
         <activity android:name=".activity.CrimeActivity"/>
 
         <activity android:name=".activity.CrimePagerActivity"/>
+
+        <activity
+            android:name=".activity.CrimeCameraActivity"
+            android:screenOrientation="landscape"/>
 
         <activity android:name=".activity.CrimeListActivity">
             <intent-filter>

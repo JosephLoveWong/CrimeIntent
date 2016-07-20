@@ -1,6 +1,8 @@
 package com.bignerdranch.android.criminalintent.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +16,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.bignerdranch.android.criminalintent.R;
+import com.bignerdranch.android.criminalintent.activity.CrimeCameraActivity;
 import com.bignerdranch.android.criminalintent.bean.Crime;
 import com.bignerdranch.android.criminalintent.bean.CrimeLab;
 import com.bignerdranch.android.criminalintent.util.LogUtil;
@@ -36,6 +40,7 @@ public class CrimeFragment extends Fragment {
     private EditText mTitle;
     private CheckBox mSolved;
     private Button mCrimeDate;
+    private ImageButton mCrimeCamera;
 
     public static CrimeFragment newInstance(UUID crimeId) {
 
@@ -101,6 +106,19 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        mCrimeCamera = (ImageButton) rootView.findViewById(R.id.crime_camera);
+        if(!checkCameraHardware(getActivity())){
+            mCrimeCamera.setEnabled(false);
+        }else{
+            mCrimeCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), CrimeCameraActivity.class);
+                    getActivity().startActivity(intent);
+                }
+            });
+        }
+
         return rootView;
     }
 
@@ -121,6 +139,17 @@ public class CrimeFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_CRIME_DATE);
             mCrimeDate.setText(date.toString());
             mCrime.setDate(date);
+        }
+    }
+
+    /** Check if this device has a camera */
+    private boolean checkCameraHardware(Context context) {
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+            // this device has a camera
+            return true;
+        } else {
+            // no camera on this device
+            return false;
         }
     }
 }

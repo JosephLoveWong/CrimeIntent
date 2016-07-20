@@ -4,19 +4,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TITLE" />
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/crime_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"/>
 
-    <EditText
-        android:id="@+id/crime_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:hint="@string/hint_crime_title" />
+        <TextView
+            android:id="@+id/crime_title_hint"
+            android:layout_toRightOf="@id/crime_camera"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TITLE" />
+
+        <EditText
+            android:layout_below="@id/crime_title_hint"
+            android:layout_toRightOf="@id/crime_camera"
+            android:id="@+id/crime_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="@string/hint_crime_title" />
+    </RelativeLayout>
+
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
