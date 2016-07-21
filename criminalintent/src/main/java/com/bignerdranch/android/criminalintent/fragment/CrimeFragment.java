@@ -33,8 +33,10 @@ import java.util.UUID;
 public class CrimeFragment extends Fragment {
     private static final String TAG = "CrimeFragment";
     public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.fragment.CrimeFragment.EXTRA_CRIME_ID";
+    public static final String EXTRA_CRIME_PHOTO_FILENAME = "com.bignerdranch.android.criminalintent.fragment.CrimeFragment.EXTRA_CRIME_PHOTO_FILENAME";
     private static final String DIALOG_DATE_TAG = "com.bignerdranch.android.criminalintent.fragment.CrimeFragment.DIALOG_DATE_TAG";
     public static final int CODE_REQUEST = 0;
+    public static final int CODE_REQUEST_CAMERA = 1;
 
     private Crime mCrime;
     private EditText mTitle;
@@ -114,7 +116,7 @@ public class CrimeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), CrimeCameraActivity.class);
-                    getActivity().startActivity(intent);
+                    getActivity().startActivityForResult(intent, CODE_REQUEST_CAMERA);
                 }
             });
         }
@@ -139,6 +141,10 @@ public class CrimeFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_CRIME_DATE);
             mCrimeDate.setText(date.toString());
             mCrime.setDate(date);
+        } else if(requestCode == CODE_REQUEST_CAMERA){
+            String photoFileName = data.getStringExtra(EXTRA_CRIME_PHOTO_FILENAME);
+            // TODO
+            LogUtil.d(TAG, "photoFileName : " + photoFileName);
         }
     }
 

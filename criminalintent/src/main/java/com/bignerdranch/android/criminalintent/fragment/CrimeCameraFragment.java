@@ -1,5 +1,8 @@
 package com.bignerdranch.android.criminalintent.fragment;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +16,9 @@ import android.widget.Button;
 
 import com.bignerdranch.android.criminalintent.R;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Created by joseph on 2016/7/20.
@@ -34,7 +39,43 @@ public class CrimeCameraFragment extends Fragment{
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                if(mCamera != null){
+                    mCamera.takePicture(null, null, new Camera.PictureCallback() {
+                        @Override
+                        public void onPictureTaken(byte[] data, Camera camera) {
+                            boolean success = true;
+                            String fileName = UUID.randomUUID().toString() + ".jpg";
+                            FileOutputStream outputStream = null;
+                            try {
+                                outputStream = getActivity().openFileOutput(fileName, Context.MODE_PRIVATE);
+                                outputStream.write(data);
+                            } catch (IOException e) {
+                                success = false;
+                                e.printStackTrace();
+                            } finally {
+                                if(outputStream != null){
+                                    try {
+                                        outputStream.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        outputStream = null;
+                                    }
+                                }
+                            }
+
+                            if(success){
+                                Intent intent = new Intent();
+                                intent.putExtra(CrimeFragment.EXTRA_CRIME_PHOTO_FILENAME, fileName);
+                                getActivity().setResult(Activity.RESULT_OK, intent);
+                            }else {
+                                getActivity().setResult(Activity.RESULT_CANCELED);
+                            }
+                            getActivity().finish();
+                        }
+                    });
+                }
+
             }
         });
 
