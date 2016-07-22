@@ -17,13 +17,17 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.bignerdranch.android.criminalintent.R;
 import com.bignerdranch.android.criminalintent.activity.CrimeCameraActivity;
 import com.bignerdranch.android.criminalintent.bean.Crime;
 import com.bignerdranch.android.criminalintent.bean.CrimeLab;
+import com.bignerdranch.android.criminalintent.bean.Photo;
 import com.bignerdranch.android.criminalintent.util.LogUtil;
+import com.bignerdranch.android.criminalintent.util.PictureUtil;
 
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -35,6 +39,7 @@ public class CrimeFragment extends Fragment {
     public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.fragment.CrimeFragment.EXTRA_CRIME_ID";
     public static final String EXTRA_CRIME_PHOTO_FILENAME = "com.bignerdranch.android.criminalintent.fragment.CrimeFragment.EXTRA_CRIME_PHOTO_FILENAME";
     private static final String DIALOG_DATE_TAG = "com.bignerdranch.android.criminalintent.fragment.CrimeFragment.DIALOG_DATE_TAG";
+    private static final String DIALOG_IMAGE_TAG = "com.bignerdranch.android.criminalintent.fragment.CrimeFragment.DIALOG_IMAGE_TAG";
     public static final int CODE_REQUEST = 0;
     public static final int CODE_REQUEST_CAMERA = 1;
 
@@ -43,6 +48,8 @@ public class CrimeFragment extends Fragment {
     private CheckBox mSolved;
     private Button mCrimeDate;
     private ImageButton mCrimeCamera;
+    private ImageView mCrimePhoto;
+    private Photo mPhoto;
 
     public static CrimeFragment newInstance(UUID crimeId) {
 
@@ -116,10 +123,24 @@ public class CrimeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), CrimeCameraActivity.class);
-                    getActivity().startActivityForResult(intent, CODE_REQUEST_CAMERA);
+                    startActivityForResult(intent, CODE_REQUEST_CAMERA);
                 }
             });
         }
+
+        mCrimePhoto = (ImageView) rootView.findViewById(R.id.crime_photo);
+        mCrimePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Photo photo = mCrime.getPhoto();
+                if(photo != null){
+                    String path = new File(getActivity().getFilesDir(), photo.getFileName()).getAbsolutePath();
+                    ImageFragment imageFragment = ImageFragment.newInstance(path);
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    imageFragment.show(fragmentManager,DIALOG_IMAGE_TAG);
+                }
+            }
+        });
 
         return rootView;
     }
@@ -136,6 +157,18 @@ public class CrimeFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        showPhoto();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        PictureUtil.cleanImageView(mCrimePhoto);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == CODE_REQUEST){
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_CRIME_DATE);
@@ -143,8 +176,23 @@ public class CrimeFragment extends Fragment {
             mCrime.setDate(date);
         } else if(requestCode == CODE_REQUEST_CAMERA){
             String photoFileName = data.getStringExtra(EXTRA_CRIME_PHOTO_FILENAME);
-            // TODO
-            LogUtil.d(TAG, "photoFileName : " + photoFileName);
+            mPhoto = new Photo();
+            mPhoto.setFileName(photoFileName);
+            mCrime.setPhoto(mPhoto);
+
+            showPhoto();
+
+        }
+    }
+
+    private void showPhoto() {
+        Photo photo = mCrime.getPhoto();
+        if(photo != null){
+            File file = new File(getActivity().getFilesDir(), photo.getFileName());
+            if(file.exists()){
+                String path = file.getAbsolutePath();
+                mCrimePhoto.setImageDrawable(PictureUtil.getScaledBitmap(getActivity(), path));
+            }
         }
     }
 

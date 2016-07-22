@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.bignerdranch.android.criminalintent.fragment.CrimeFragment;
-import com.bignerdranch.android.criminalintent.util.LogUtil;
 
 import java.util.UUID;
 
@@ -20,6 +19,5 @@ public class CrimeActivity extends BaseActivitySingleFragment {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtil.d("tt",",,,,,,");
     }
 }

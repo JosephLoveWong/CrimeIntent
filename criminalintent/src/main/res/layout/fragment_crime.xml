@@ -7,28 +7,35 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/crime_photo"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
+
         <ImageButton
             android:id="@+id/crime_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_camera"/>
+            android:layout_below="@id/crime_photo"
+            android:src="@android:drawable/ic_menu_camera" />
 
         <TextView
             android:id="@+id/crime_title_hint"
-            android:layout_toRightOf="@id/crime_camera"
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/crime_photo"
             android:text="TITLE" />
 
         <EditText
-            android:layout_below="@id/crime_title_hint"
-            android:layout_toRightOf="@id/crime_camera"
             android:id="@+id/crime_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/crime_title_hint"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:layout_toRightOf="@id/crime_photo"
             android:hint="@string/hint_crime_title" />
     </RelativeLayout>
 
@@ -46,12 +53,12 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp" />
 
-   <CheckBox
-       android:id="@+id/crime_solved"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_marginLeft="16dp"
-       android:layout_marginRight="16dp"
-       android:text="Solved?"/>
+    <CheckBox
+        android:id="@+id/crime_solved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Solved?" />
 
 </LinearLayout>
