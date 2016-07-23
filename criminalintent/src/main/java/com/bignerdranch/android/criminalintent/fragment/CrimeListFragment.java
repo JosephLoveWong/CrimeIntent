@@ -1,6 +1,6 @@
 package com.bignerdranch.android.criminalintent.fragment;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -13,9 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bignerdranch.android.criminalintent.R;
-import com.bignerdranch.android.criminalintent.activity.CrimeActivity;
 import com.bignerdranch.android.criminalintent.activity.CrimeListActivity;
-import com.bignerdranch.android.criminalintent.activity.CrimePagerActivity;
 import com.bignerdranch.android.criminalintent.bean.Crime;
 import com.bignerdranch.android.criminalintent.bean.CrimeLab;
 import com.bignerdranch.android.criminalintent.util.LogUtil;
@@ -31,6 +29,20 @@ public class CrimeListFragment extends ListFragment {
     private static final String TAG = "CrimeListFragment";
     private List<Crime> mCrimes;
     private FloatingActionButton mFab;
+
+    private Callbacks mCallbacks;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,9 +63,7 @@ public class CrimeListFragment extends ListFragment {
             public void onClick(View v) {
                 Crime crime = new Crime();
                 CrimeLab.getInstance(getActivity()).addCrime(crime);
-                Intent intent = new Intent(getActivity(), CrimeActivity.class);
-                intent.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getID());
-                startActivityForResult(intent, REQUESTCODE_CRIMEFRAGMENT);
+                mCallbacks.onCrimeSelected(crime);
             }
         });
     }
@@ -67,17 +77,8 @@ public class CrimeListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         LogUtil.d(TAG, "onClick " + position);
-
-        Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
-        intent.putExtra(CrimeFragment.EXTRA_CRIME_ID, mCrimes.get(position).getID());
-
-        startActivityForResult(intent, REQUESTCODE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUESTCODE) {
-            // TODO
+        if(mCallbacks != null){
+            mCallbacks.onCrimeSelected(mCrimes.get(position));
         }
     }
 
@@ -106,6 +107,14 @@ public class CrimeListFragment extends ListFragment {
 
             return convertView;
         }
+    }
+
+    public void updateUI(){
+        ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    public interface Callbacks{
+        void onCrimeSelected(Crime crime);
     }
 
 }

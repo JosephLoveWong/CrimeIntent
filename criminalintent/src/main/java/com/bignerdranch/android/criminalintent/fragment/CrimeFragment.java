@@ -58,6 +58,8 @@ public class CrimeFragment extends Fragment {
     private Button mSendReport;
     private Photo mPhoto;
 
+    private Callbacks mCallbacks;
+
     public static CrimeFragment newInstance(UUID crimeId) {
 
         Bundle args = new Bundle();
@@ -66,6 +68,18 @@ public class CrimeFragment extends Fragment {
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 
     @Override
@@ -93,6 +107,7 @@ public class CrimeFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 LogUtil.d(TAG, "onTextChanged");
                 mCrime.setTitle(s.toString());
+                mCallbacks.onCrimeUpdated(mCrime);
             }
 
             @Override
@@ -107,6 +122,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                mCallbacks.onCrimeUpdated(mCrime);
             }
         });
 
@@ -234,6 +250,8 @@ public class CrimeFragment extends Fragment {
             mSuspect.setText(suspect);
             c.close();
         }
+
+        mCallbacks.onCrimeUpdated(mCrime);
     }
 
     private void showPhoto() {
@@ -279,5 +297,9 @@ public class CrimeFragment extends Fragment {
         String report = getString(R.string.crime_report, mCrime.getTitle(), dateString, solvedString, suspect);
 
         return report;
+    }
+
+    public interface Callbacks{
+        void onCrimeUpdated(Crime crime);
     }
 }

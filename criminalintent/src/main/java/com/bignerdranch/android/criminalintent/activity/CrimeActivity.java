@@ -4,11 +4,12 @@ package com.bignerdranch.android.criminalintent.activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import com.bignerdranch.android.criminalintent.bean.Crime;
 import com.bignerdranch.android.criminalintent.fragment.CrimeFragment;
 
 import java.util.UUID;
 
-public class CrimeActivity extends BaseActivitySingleFragment {
+public class CrimeActivity extends BaseActivitySingleFragment implements CrimeFragment.Callbacks{
 
     @Override
     protected Fragment createFragment() {
@@ -19,5 +20,10 @@ public class CrimeActivity extends BaseActivitySingleFragment {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+
     }
 }

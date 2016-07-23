@@ -18,7 +18,7 @@ public abstract class BaseActivitySingleFragment extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fragment);
+        setContentView(getLayoutResId());
 
         mFab = (FloatingActionButton)findViewById(R.id.fab_add);
 
@@ -34,6 +34,12 @@ public abstract class BaseActivitySingleFragment extends FragmentActivity {
         return mFab;
     }
 
+    protected int getLayoutResId(){
+        return R.layout.activity_fragment;
+    }
+
     protected abstract Fragment createFragment();
+
+
 
 }
